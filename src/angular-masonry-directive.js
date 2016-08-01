@@ -66,17 +66,17 @@
             link: function (scope, elem, attrs, masonryCtrl) {
                 elem.css('visibility', 'hidden');
 
-                if (masonryCtrl.update) {
-                    imagesLoaded(elem.get(0), masonryCtrl.update);
-                    elem.ready(masonryCtrl.update);
+                if (typeof masonryCtrl === 'undefined') {
+                    throw new Error('masonryTile must be nested within a masonry directive');
                 }
-                if (masonryCtrl.appendBricks) {
-                    imagesLoaded(elem.get(0), masonryCtrl.appendBricks(elem));
-                }
+
+                imagesLoaded(elem.get(0), masonryCtrl.update);
+                imagesLoaded(elem.get(0), masonryCtrl.appendBricks(elem));
+
+                elem.ready(masonryCtrl.update);
+
                 scope.$on('$destroy', function () {
-                    if (masonryCtrl.removeBrick) {
-                        masonryCtrl.removeBrick();
-                    }
+                    masonryCtrl.removeBrick();
                 });
             }
         };
