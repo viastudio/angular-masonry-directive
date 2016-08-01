@@ -39,7 +39,7 @@
                     masonry.appended(ele);
                 };
 
-                $scope.$on('masonry.layout', function() {
+                $scope.$root.$on('masonry.layout', function() {
                     masonry.layout();
                 });
 
@@ -58,26 +58,23 @@
                 });
             }]
         };
-    }]).directive('masonryTile', function() {
+    }]).directive('masonryTile', function () {
         return {
             restrict: 'AC',
-            require:'^masonry',
-            link: function(scope, elem, attrs, masonryCtrl) {
+            require: '^masonry',
+            link: function (scope, elem, attrs, masonryCtrl) {
                 elem.css('visibility', 'hidden');
-                var master = elem.parent('*[masonry]:first').scope(),
-                    update = masonryCtrl.update,
-                    removeBrick = masonryCtrl.removeBrick,
-                    appendBricks = masonryCtrl.appendBricks;
-                if (update) {
-                    imagesLoaded(elem.get(0), update);
-                    elem.ready(update);
+
+                if (masonryCtrl.update) {
+                    imagesLoaded(elem.get(0), masonryCtrl.update);
+                    elem.ready(masonryCtrl.update);
                 }
-                if (appendBricks) {
-                    imagesLoaded(elem.get(0), appendBricks(elem));
+                if (masonryCtrl.appendBricks) {
+                    imagesLoaded(elem.get(0), masonryCtrl.appendBricks(elem));
                 }
                 scope.$on('$destroy', function() {
-                    if (removeBrick) {
-                        removeBrick();
+                    if (masonryCtrl.removeBrick) {
+                        masonryCtrl.removeBrick();
                     }
                 });
             }
