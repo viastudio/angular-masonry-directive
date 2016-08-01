@@ -1,4 +1,5 @@
-(function() {
+/* global imagesLoaded:true, Masonry:true */
+(function () {
     "use strict";
 
     angular.module('masonry', ['ng']).directive('masonry', ['$timeout', function ($timeout) {
@@ -14,11 +15,11 @@
                 var masonry = $scope.masonry = new Masonry(container, options);
 
                 var debounceTimeout = 0;
-                this.update = function() {
+                this.update = function () {
                     if (debounceTimeout) {
                         $timeout.cancel(debounceTimeout);
                     }
-                    debounceTimeout = $timeout(function() {
+                    debounceTimeout = $timeout(function () {
                         debounceTimeout = 0;
 
                         masonry.reloadItems();
@@ -28,18 +29,18 @@
                     }, 120);
                 };
 
-                this.removeBrick = function() {
-                    $timeout(function() {
+                this.removeBrick = function () {
+                    $timeout(function () {
                         masonry.reloadItems();
                         masonry.layout();
-                   }, 500);
+                    }, 500);
                 };
 
-                this.appendBricks = function(ele) {
+                this.appendBricks = function (ele) {
                     masonry.appended(ele);
                 };
 
-                $scope.$on('masonry.layout', function() {
+                $scope.$root.$on('masonry.layout', function () {
                     masonry.layout();
                 });
 
@@ -58,27 +59,24 @@
                 });
             }]
         };
-    }]).directive('masonryTile', function() {
+    }]).directive('masonryTile', function () {
         return {
             restrict: 'AC',
-            require:'^masonry',
-            link: function(scope, elem, attrs, masonryCtrl) {
+            require: '^masonry',
+            link: function (scope, elem, attrs, masonryCtrl) {
                 elem.css('visibility', 'hidden');
-                var master = elem.parent('*[masonry]:first').scope(),
-                    update = masonryCtrl.update,
-                    removeBrick = masonryCtrl.removeBrick,
-                    appendBricks = masonryCtrl.appendBricks;
-                if (update) {
-                    imagesLoaded(elem.get(0), update);
-                    elem.ready(update);
+
+                if (typeof masonryCtrl === 'undefined') {
+                    throw new Error('masonryTile must be nested within a masonry directive');
                 }
-                if (appendBricks) {
-                    imagesLoaded(elem.get(0), appendBricks(elem));
-                }
-                scope.$on('$destroy', function() {
-                    if (removeBrick) {
-                        removeBrick();
-                    }
+
+                imagesLoaded(elem.get(0), masonryCtrl.update);
+                imagesLoaded(elem.get(0), masonryCtrl.appendBricks(elem));
+
+                elem.ready(masonryCtrl.update);
+
+                scope.$on('$destroy', function () {
+                    masonryCtrl.removeBrick();
                 });
             }
         };
