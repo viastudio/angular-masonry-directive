@@ -1,4 +1,5 @@
-(function() {
+/* global imagesLoaded:true, Masonry:true */
+(function () {
     "use strict";
 
     angular.module('masonry', ['ng']).directive('masonry', ['$timeout', function ($timeout) {
@@ -14,11 +15,11 @@
                 var masonry = $scope.masonry = new Masonry(container, options);
 
                 var debounceTimeout = 0;
-                this.update = function() {
+                this.update = function () {
                     if (debounceTimeout) {
                         $timeout.cancel(debounceTimeout);
                     }
-                    debounceTimeout = $timeout(function() {
+                    debounceTimeout = $timeout(function () {
                         debounceTimeout = 0;
 
                         masonry.reloadItems();
@@ -28,18 +29,18 @@
                     }, 120);
                 };
 
-                this.removeBrick = function() {
-                    $timeout(function() {
+                this.removeBrick = function () {
+                    $timeout(function () {
                         masonry.reloadItems();
                         masonry.layout();
-                   }, 500);
+                    }, 500);
                 };
 
-                this.appendBricks = function(ele) {
+                this.appendBricks = function (ele) {
                     masonry.appended(ele);
                 };
 
-                $scope.$root.$on('masonry.layout', function() {
+                $scope.$root.$on('masonry.layout', function () {
                     masonry.layout();
                 });
 
@@ -72,7 +73,7 @@
                 if (masonryCtrl.appendBricks) {
                     imagesLoaded(elem.get(0), masonryCtrl.appendBricks(elem));
                 }
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', function () {
                     if (masonryCtrl.removeBrick) {
                         masonryCtrl.removeBrick();
                     }
