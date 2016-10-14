@@ -70,8 +70,8 @@
                     throw new Error('masonryTile must be nested within a masonry directive');
                 }
 
-                imagesLoaded(elem.get(0), masonryCtrl.update);
-                imagesLoaded(elem.get(0), masonryCtrl.appendBricks(elem));
+                imagesLoaded(elem[0], masonryCtrl.update);
+                imagesLoaded(elem[0], masonryCtrl.appendBricks(elem));
 
                 elem.ready(masonryCtrl.update);
 
