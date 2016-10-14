@@ -29,6 +29,8 @@
                     }, 120);
                 };
 
+                var that = this;
+
                 this.removeBrick = function () {
                     $timeout(function () {
                         masonry.reloadItems();
@@ -46,16 +48,16 @@
 
                 this.update();
 
-                $scope.$on('ngMasonry.update', function () {
-                    this.update();
+                $scope.$root.$on('ngMasonry.update', function () {
+                    that.update();
                 });
 
                 $scope.$on('ngMasonry.removeBrick', function () {
-                    this.removeBrick();
+                    that.removeBrick();
                 });
 
                 $scope.$on('ngMasonry.appendBricks', function (el) {
-                    this.appendBricks(el);
+                    that.appendBricks(el);
                 });
             }]
         };
